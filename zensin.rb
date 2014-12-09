@@ -91,7 +91,9 @@ get '/:view/scores_piechart' do
 	view.tickets.each do |t|
 		begin
 			ticket = Ticket.new(t)
-			@result.push(JSON.parse({ value: ticket.satisfaction_rating, label: ticket.satisfaction_feedback }.to_json))
+			if !ticket.satisfaction_rating.nil? && !ticket.satisfaction_feedback.nil?
+				@result.push(JSON.parse({ value: ticket.satisfaction_rating, label: ticket.satisfaction_feedback }.to_json))
+			end
 		rescue => e
 			puts '-------------------'
 			puts " -- Ticket #{t.id} -- "
