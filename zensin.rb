@@ -35,23 +35,10 @@ class Ticket
     	end
     	output
     end
-
-    def self.find_by_rating(string)  #static method (known as a class method in ruby)
-		where(satisfaction_rating: string)
-   	end
-
     def to_json
         { ticket_id: @ticket_id, satisfaction_rating: self.satisfaction_rating, feedback: @feedback.to_s}.to_json
     end
- 	def to_hash
-		hash = {}
-		instance_variables.each {|var| hash[var.to_s.delete("@")] = instance_variable_get(var) }
-		hash
-	end
-end
 
-get '/' do
-	'zendesk > json for geckboard'
 end
 
 get '/:view/count' do
@@ -68,43 +55,9 @@ get '/:view/count' do
 	"count=#{tickets.count}"
 end
 
-get '/:view/first_ticket' do
-
-	view = client.view.find(id: params[:view]) # '48000166')
-	tickets = view.tickets
-	first = tickets.first
-	desc = first.description
-
-	hash = YAML.load(desc)
-
-	tick = Ticket.new(first)
-
-	"first_ticket=#{tick.to_json}"
-end
-
 get '/ticket/:ticket' do
 	ticket = Ticket.new(client.tickets.find(id: params[:ticket]))
 	"#{ticket.to_json}"
-end
-
-get '/:view/scores_piechart' do
-	view = client.view.find(id: params[:view]) 
-
-	@result = []
-	view.tickets.each do |t|
-		begin
-			ticket = Ticket.new(t)
-			if !ticket.satisfaction_rating.nil? && !ticket.satisfaction_feedback.nil?
-				@result.push(JSON.parse({ value: ticket.satisfaction_rating, label: ticket.satisfaction_feedback }.to_json))
-			end
-		rescue => e
-			puts '-------------------'
-			puts " -- Ticket #{t.id} -- "
-			puts "error messaage : #{e.message}"
-		end
-	end
-	@output = { item: @result }
-	@output.to_json
 end
 
 get '/:view/piechart_data' do
@@ -123,7 +76,7 @@ get '/:view/piechart_data' do
 			puts "error messaage : #{e.message}"
 		end
 	end
-	@test = []
+	@counted = []
 
 	values = [
 				{ label: 'very satisfied', colour: '339900'}, 
@@ -135,29 +88,11 @@ get '/:view/piechart_data' do
 
 	values.each do |obj|
 		count = @result.select{ |f| f['label'] == obj[:label] }.count
-		@test.push( JSON.parse( { value: count, label: obj[:label], color: obj[:colour]  }.to_json ) )
+		@counted.push( JSON.parse( { value: count, label: obj[:label], color: obj[:colour]  }.to_json ) )
 	end
-	@output = { item: @test }
+	@output = { item: @counted }
 
 	@output.to_json
-end
-
-
-get '/test/:view' do
-
-	view = client.view.find(id: params[:view]) 
-
-	@result = []
-	view.tickets.each do |t|
-		begin
-			@result.push(JSON.parse(Ticket.new(t).to_json))
-		rescue => e
-			puts '-------------------'
-			puts " -- Ticket #{t.id} -- "
-			puts "error messaage : #{e.message}"
-		end
-	end
-	@result.to_json
 end
 
 private 
