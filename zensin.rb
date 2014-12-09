@@ -10,7 +10,7 @@ class Ticket
 	
 	def initialize(ticket)
 		yaml_in = YAML.load(ticket.description.gsub(/\r\n/,'\n').gsub(/(?<!\n)\n(?!\n)/,'!!!!!'))
-		@satisfaction_feedback = yaml_in['satisfaction_feedback']
+		@satisfaction_feedback = yaml_in['satisfaction_feedback'].downcase.gsub(/[_]/,' ')
 		@feedback = yaml_in['improvement_feedback']
 		@ticket_id = ticket.id
 	end
@@ -18,16 +18,16 @@ class Ticket
 	def satisfaction_rating
 		@output = 0
 		if !@satisfaction_feedback.nil? && !@satisfaction_feedback.empty?
-			case @satisfaction_feedback
-			when 'very_satisfied'
+			case @satisfaction_feedback.downcase.gsub(/[_]/,' ')
+			when 'very satisfied'
 				output = 5
 	        when 'satisfied'
 	        	output = 4
-	        when 'neither_satisfied_or_dissatisfied'
+	        when 'neither satisfied or dissatisfied'
 	        	output = 3
 	        when 'dissatisfied'
 	        	output =  2
-	        when 'very_dissatisfied'
+	        when 'very dissatisfied'
 	        	output = 1
 	        else
 	        	output = 0
