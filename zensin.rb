@@ -1,6 +1,6 @@
 require 'sinatra'
 require 'zendesk_api'
-require 'YAML'
+require 'yaml'
 require 'json'
 
 class Ticket
