@@ -126,11 +126,11 @@ get '/:view/piechart_data' do
 	@test = []
 
 	values = [
-				{ label: 'very satisfied', colour: '336600'}, 
-				{ label: 'satisfied', colour: '336600'}, 
-				{ label: 'neither satisfied or dissatisfied', colour: 'ff6600'}, 
-				{ label: 'dissatisfied', colour: '663300'}, 
-				{ label: 'very dissatisfied', colour: 'df3034'},
+				{ label: 'very satisfied', colour: '339900'}, 
+				{ label: 'satisfied', colour: '99cc66'}, 
+				{ label: 'neither satisfied or dissatisfied', colour: '999999'}, 
+				{ label: 'dissatisfied', colour: 'ff8533'}, 
+				{ label: 'very dissatisfied', colour: 'd84000'},
 			]
 
 	values.each do |obj|
