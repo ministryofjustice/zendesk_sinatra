@@ -2,8 +2,6 @@ require 'sinatra'
 require 'zendesk_api'
 require 'yaml'
 require 'json'
-require 'active_support'
-require 'inflection'
 
 class Ticket
 	attr_accessor :ticket_id
