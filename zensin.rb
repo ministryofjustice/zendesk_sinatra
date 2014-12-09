@@ -127,9 +127,9 @@ get '/:view/piechart_data' do
 
 	values = [
 				{ label: 'very satisfied', colour: '00ff00'}, 
-				{ label: 'satisfied', colour: '66ff00'}, 
-				{ label: 'neither satisfied or dissatisfied', colour: 'ffff00'}, 
-				{ label: 'dissatisfied', colour: 'ff6600'}, 
+				{ label: 'satisfied', colour: '336600'}, 
+				{ label: 'neither satisfied or dissatisfied', colour: 'ff6600'}, 
+				{ label: 'dissatisfied', colour: '663300'}, 
 				{ label: 'very dissatisfied', colour: 'ff0000'},
 			]
 
