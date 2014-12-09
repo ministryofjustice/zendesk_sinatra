@@ -134,7 +134,7 @@ get '/:view/piechart_data' do
 	end
 	@output = { item: @test }
 
-	@output
+	@output.to_json
 end
 
 
