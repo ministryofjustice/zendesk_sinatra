@@ -100,7 +100,7 @@ get '/:view/scores_piechart' do
 	end
 	@result = '{  "item": [{"value": 100,"label": "May","color": "13699c"},{"value": 160, "label": "June","color": "198acd"},{"value": 300,      "label": "July",      "color": "60b8ec"},{"value": 140,"label": "August","color": "a4d7f4"}]}'
 
-	@result.to_json
+	@result
 
 end
 
