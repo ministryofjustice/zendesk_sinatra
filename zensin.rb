@@ -2,6 +2,8 @@ require 'sinatra'
 require 'zendesk_api'
 require 'yaml'
 require 'json'
+require 'active_support'
+require 'inflection'
 
 class Ticket
 	attr_accessor :ticket_id
@@ -90,7 +92,8 @@ get '/:view/scores_piechart' do
 	@result = []
 	view.tickets.each do |t|
 		begin
-			@result.push(JSON.parse({ satisfaction_rating: Ticket.new(t).satisfaction_rating}.to_json))
+			ticket = Ticket.new(t)
+			@result.push(JSON.parse({ value: ticket.satisfaction_rating, label: ticket.satisfaction_feedback }.to_json))
 		rescue => e
 			puts '-------------------'
 			puts " -- Ticket #{t.id} -- "
