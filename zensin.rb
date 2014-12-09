@@ -36,6 +36,9 @@ class Ticket
     	output
     end
 
+    def self.find_by_rating(string)  #static method (known as a class method in ruby)
+		where(satisfaction_rating: string)
+   	end
 
     def to_json
         { ticket_id: @ticket_id, satisfaction_rating: self.satisfaction_rating, feedback: @feedback.to_s}.to_json
@@ -100,10 +103,40 @@ get '/:view/scores_piechart' do
 			puts "error messaage : #{e.message}"
 		end
 	end
-	@output = { item: @result}
+	@output = { item: @result }
 	@output.to_json
-
 end
+
+get '/:view/piechart_data' do
+	view = client.view.find(id: params[:view]) 
+
+	@result = []
+	view.tickets.each do |t|
+		begin
+			ticket = Ticket.new(t)
+			if !ticket.satisfaction_rating.nil? && !ticket.satisfaction_feedback.nil?
+				@result.push(JSON.parse({ value: ticket.satisfaction_rating, label: ticket.satisfaction_feedback }.to_json))
+			end
+		rescue => e
+			puts '-------------------'
+			puts " -- Ticket #{t.id} -- "
+			puts "error messaage : #{e.message}"
+		end
+	end
+	@test = []
+	#imp_code_array = project_array.collect{ |item| item[ 'imp_code' ] }.uniq
+	values = @result.collect{ |f| f['label'] }.uniq
+	values.each do |label|
+
+		count = @result.select{ |f| f['label'] == label }.count
+
+		@test.push( JSON.parse( { value: count, label: label }.to_json ) )
+	end
+	@output = { item: @test }
+
+	@output
+end
+
 
 get '/test/:view' do
 
