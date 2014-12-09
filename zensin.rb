@@ -98,7 +98,7 @@ get '/:view/scores_piechart' do
 	# 	end
 	# end
 
-result = '{{satisfaction_rating: 1},{satisfaction_rating: 1},{satisfaction_rating: 2},{satisfaction_rating: 5}}'
+result = '[{satisfaction_rating: 1},{satisfaction_rating: 1},{satisfaction_rating: 2},{satisfaction_rating: 5}]'
 
 	result.to_json
 
