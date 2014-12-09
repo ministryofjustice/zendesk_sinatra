@@ -1,0 +1,1 @@
+web: bundle exec ruby zensin.rb -p $PORT
