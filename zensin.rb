@@ -87,17 +87,20 @@ end
 get '/:view/scores_piechart' do
 	view = client.view.find(id: params[:view]) 
 
-	@result = []
-	view.tickets.each do |t|
-		begin
-			@result.push(JSON.parse({ satisfaction_rating: Ticket.new(t).satisfaction_rating}.to_json))
-		rescue => e
-			puts '-------------------'
-			puts " -- Ticket #{t.id} -- "
-			puts "error messaage : #{e.message}"
-		end
-	end
-	@result.to_json
+	# result = Hash.new
+	# view.tickets.each do |t|
+	# 	begin
+	# 		result.update!(JSON.parse({ satisfaction_rating: Ticket.new(t).satisfaction_rating}.to_json))
+	# 	rescue => e
+	# 		puts '-------------------'
+	# 		puts " -- Ticket #{t.id} -- "
+	# 		puts "error messaage : #{e.message}"
+	# 	end
+	# end
+
+result = '{{satisfaction_rating: 1},{satisfaction_rating: 1},{satisfaction_rating: 2},{satisfaction_rating: 5}}'
+
+	result.to_json
 
 end
 
