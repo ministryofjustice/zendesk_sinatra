@@ -124,13 +124,18 @@ get '/:view/piechart_data' do
 		end
 	end
 	@test = []
-	#imp_code_array = project_array.collect{ |item| item[ 'imp_code' ] }.uniq
-	values = @result.collect{ |f| f['label'] }.uniq
-	values.each do |label|
 
-		count = @result.select{ |f| f['label'] == label }.count
+	values = [
+				{ label: 'very satisfied', colour: '00ff00'}, 
+				{ label: 'satisfied', colour: '66ff00'}, 
+				{ label: 'neither satisfied or dissatisfied', colour: 'ffff00'}, 
+				{ label: 'dissatisfied', colour: 'ff6600'}, 
+				{ label: 'very dissatisfied', colour: 'ff0000'},
+			]
 
-		@test.push( JSON.parse( { value: count, label: label }.to_json ) )
+	values.each do |obj|
+		count = @result.select{ |f| f['label'] == obj[:label] }.count
+		@test.push( JSON.parse( { value: count, label: obj[:label], color: obj[:colour]  }.to_json ) )
 	end
 	@output = { item: @test }
 
