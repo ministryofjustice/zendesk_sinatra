@@ -47,6 +47,10 @@ class Ticket
 	end
 end
 
+get '/' do
+	'zendesk > json for geckboard'
+end
+
 get '/:view/count' do
 
 	view = client.view.find(id: params[:view]) # '48000166')
