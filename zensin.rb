@@ -84,6 +84,23 @@ get '/ticket/:ticket' do
 	"#{ticket.to_json}"
 end
 
+get '/:view/scores_piechart' do
+	view = client.view.find(id: params[:view]) 
+
+	@result = []
+	view.tickets.each do |t|
+		begin
+			@result.push(JSON.parse({ satisfaction_rating: Ticket.new(t).satisfaction_rating}.to_json))
+		rescue => e
+			puts '-------------------'
+			puts " -- Ticket #{t.id} -- "
+			puts "error messaage : #{e.message}"
+		end
+	end
+	@result.to_json
+
+end
+
 get '/test/:view' do
 
 	view = client.view.find(id: params[:view]) 
