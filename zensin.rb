@@ -45,12 +45,6 @@ get '/:view/count' do
 
 	view = client.view.find(id: params[:view]) # '48000166')
 	tickets = view.tickets
-	first = tickets.first
-	desc = first.description
-
-	hash = YAML.load(desc)
-
-	tick = Ticket.new(first)
 
 	"count=#{tickets.count}"
 end
@@ -88,7 +82,7 @@ get '/:view/piechart_data' do
 
 	values.each do |obj|
 		count = @result.select{ |f| f['label'] == obj[:label] }.count
-		@counted.push( JSON.parse( { value: count, label: obj[:label], color: obj[:colour]  }.to_json ) )
+		@counted.push( JSON.parse( { value: count, label: "#{obj[:label]} (#{count})", color: obj[:colour]  }.to_json ) )
 	end
 	@output = { item: @counted }
 
