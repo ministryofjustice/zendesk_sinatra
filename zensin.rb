@@ -151,16 +151,15 @@ get '/:view/feedback/:type' do
 	@result = []
 	view.tickets.each do |t|
 
-		new_ticket = (((Time.now - t[:created_at])/3600)/24) < 7
+		last_x_days = 7
 
-		puts "new ticket #{t[:created_at]} days? = #{new_ticket}" if new_ticket
 		begin
 			ticket = Ticket.new(t)
 			case params[:type]
 			when 'improvement'
 				if !ticket.improvement_feedback.nil? 
-					@label = {}
-					@label = { name: 'New', color: '#33CC33' } if new_ticket
+					@label = { name: '', color: ''}
+					@label = { name: 'New', color: '#33CC33' } if (((Time.now - t[:created_at])/3600)/24) < last_x_days
 
 					@result.push(JSON.parse(
 							{
