@@ -127,12 +127,12 @@ get '/:view/piechart_data/:type' do
 		] if params[:type] == 'satisfaction'
 	
 	values = [
-		{ label: 'filled in myself', colour: 'd0ff00'}, 
-		{ label: 'filled in for me', colour: 'ff0051'}, 
-		{ label: 'used accessibility tool', colour: 'ae00ff'}, 
-		{ label: 'other help', colour: '685aff'}, 
-		{ label: 'not completed', colour: 'd84000'}, 
-	] if params[:type] == 'help'
+			{ label: 'filled in myself', colour: 'd0ff00'}, 
+			{ label: 'filled in for me', colour: 'ff0051'}, 
+			{ label: 'used accessibility tool', colour: 'ae00ff'}, 
+			{ label: 'other help', colour: '685aff'}, 
+			{ label: 'not completed', colour: 'd84000'}, 
+		] if params[:type] == 'help'
 
 	values.each do |obj|
 		count = @result.select{ |f| f['label'] == obj[:label] }.count
@@ -140,6 +140,30 @@ get '/:view/piechart_data/:type' do
 	end
 	@output = { item: @counted }
 
+	@output.to_json
+end
+
+get '/:view/feedback/:type' do
+	view = client.view.find(id: params[:view]) 
+
+	@result = []
+	view.tickets.each do |t|
+		begin
+			ticket = Ticket.new(t)
+			case params[:type]
+			when 'improvement'
+				if !ticket.improvement_feedback.nil? 
+					@result.push(JSON.parse({ text: ticket.improvement_feedback }.to_json))
+				end
+
+			end
+		rescue => e
+			puts '-------------------'
+			puts " -- Ticket #{t.id} -- "
+			puts "error messaage : #{e.message}"
+		end
+	end
+	@output = { item: @result }
 	@output.to_json
 end
 
