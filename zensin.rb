@@ -156,7 +156,7 @@ get '/:view/feedback/:type' do
 		begin
 			ticket = Ticket.new(t)
 			@label = { name: '', color: ''}
-			@title = { text: '' }
+			@title = ''
 			@label = { name: 'New', color: '#33CC33' } if (((Time.now - t[:created_at])/3600)/24) < last_x_days
 			case params[:type]
 			when 'improvement'
@@ -169,7 +169,7 @@ get '/:view/feedback/:type' do
 	 				title: @title,
 					label: @label , 
 					description: "Ticket:#{ticket.ticket_id}, created: #{t[:created_at].strftime('%m/%d/%y %H:%M')}" 
-				}.to_json))
+				}.to_json)) if @title!=''
 
 		rescue => e
 			puts '-------------------'
