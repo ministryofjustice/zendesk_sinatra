@@ -2,6 +2,8 @@ require 'sinatra'
 require 'zendesk_api'
 require 'yaml'
 require 'json'
+require 'date'
+require 'time'
 
 class Ticket
 	attr_accessor :ticket_id
@@ -148,15 +150,22 @@ get '/:view/feedback/:type' do
 
 	@result = []
 	view.tickets.each do |t|
+
+		new_ticket = (((Time.now - t[:created_at])/3600)/24) < 7
+
+		puts "new ticket #{t[:created_at]} days? = #{new_ticket}" if new_ticket
 		begin
 			ticket = Ticket.new(t)
 			case params[:type]
 			when 'improvement'
 				if !ticket.improvement_feedback.nil? 
+					@label = {}
+					@label = { name: 'New', color: '#33CC33' } if new_ticket
+
 					@result.push(JSON.parse(
 							{
 				 				title: { text: ticket.improvement_feedback },
-								label: { name: 'New', color: '#33CC33' }, 
+								label: @label , 
 								description: "Ticket:#{ticket.ticket_id}" 
 							}.to_json))
 				end
