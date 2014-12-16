@@ -27,16 +27,19 @@ class Ticket
 		if !@satisfaction_feedback.nil? && !@satisfaction_feedback.empty?
 			case @satisfaction_feedback.downcase.gsub(/[_]/,' ')
 			when 'very satisfied'
-				output = 5
+				output = 6
 	        when 'satisfied'
-	        	output = 4
+	        	output = 5
 	        when 'neither satisfied or dissatisfied'
-	        	output = 3
+	        	output = 4
 	        when 'dissatisfied'
-	        	output = 2
+	        	output = 3
 	        when 'very dissatisfied'
+	        	output = 2
+	        when 'not completed'
 	        	output = 1
 	        else
+	        	puts "=====#{@satisfaction_feedback}"
 	        	output = 0
 	        end
     	end
@@ -120,6 +123,7 @@ get '/:view/piechart_data/:type' do
 			{ label: 'neither satisfied or dissatisfied', colour: '999999'}, 
 			{ label: 'dissatisfied', colour: 'ff8533'}, 
 			{ label: 'very dissatisfied', colour: 'd84000'},
+			{ label: 'not completed', colour: 'ff3300'},
 		] if params[:type] == 'satisfaction'
 	
 	values = [
