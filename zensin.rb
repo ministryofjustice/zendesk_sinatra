@@ -153,7 +153,7 @@ get '/:view/feedback/:type' do
 			case params[:type]
 			when 'improvement'
 				if !ticket.improvement_feedback.nil? 
-					@result.push(JSON.parse({ text: ticket.improvement_feedback }.to_json))
+					@result.push(JSON.parse({ text: ticket.improvement_feedback, decsription: "Ticket:#{ticket.ticket_id}" }.to_json))
 				end
 
 			end
