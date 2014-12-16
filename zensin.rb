@@ -15,7 +15,7 @@ class Ticket
 
 	
 	def initialize(ticket)
-		yaml_in = YAML.load(ticket.description.gsub(/\r\n/,'\n').gsub(/(?<!\n)\n(?!\n)/,'!!!!!'))
+		yaml_in = YAML.load(ticket.description.gsub(/\r\n/,'\n').gsub(/(?<!\n)\n(?!\n)/,''))
 		@satisfaction_feedback = flatten_feedback(yaml_in['satisfaction_feedback'])
 		@improvement_feedback = yaml_in['improvement_feedback']
 		@difficulty_feedback = yaml_in['difficulty_feedback']
@@ -160,15 +160,15 @@ get '/:view/feedback/:type' do
 			@label = { name: 'New', color: '#33CC33' } if (((Time.now - t[:created_at])/3600)/24) < last_x_days
 			case params[:type]
 			when 'improvement'
-				@title = { text: ticket.improvement_feedback } if !ticket.improvement_feedback.nil? 
+				@title = { text: ticket.improvement_feedback } if !ticket.improvement_feedback.nil? && ticket.improvement_feedback.length>0
 			when 'difficulty'
-				@title = { text: ticket.difficulty_feedback } if !ticket.difficulty_feedback.nil? 
+				@title = { text: ticket.difficulty_feedback } if !ticket.difficulty_feedback.nil? && ticket.difficulty_feedback.length>0
 			end
 			@result.push(JSON.parse(
 				{
 	 				title: @title,
 					label: @label , 
-					description: "Ticket:#{ticket.ticket_id}, created: #{t[:created_at]}" 
+					description: "Ticket:#{ticket.ticket_id}, created: #{t[:created_at].strftime('%m/%d/%y %H:%M')}" 
 				}.to_json))
 
 		rescue => e
