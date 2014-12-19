@@ -38,10 +38,9 @@ class Ticket
 	        	output = 3
 	        when 'very dissatisfied'
 	        	output = 2
-	        when 'not completed'
+	        when 'this question not answered'
 	        	output = 1
 	        else
-	        	puts "=====#{@satisfaction_feedback}"
 	        	output = 0
 	        end
     	end
@@ -59,7 +58,7 @@ class Ticket
 	        	output = 3
 			when 'other help'
 	        	output = 2
-	        when 'not completed'
+	        when 'this question not answered'
 	        	output = 1
 	        else 
 	        	output = 1
@@ -125,7 +124,7 @@ get '/:view/piechart_data/:type' do
 			{ label: 'neither satisfied or dissatisfied', colour: '999999'}, 
 			{ label: 'dissatisfied', colour: 'ff8533'}, 
 			{ label: 'very dissatisfied', colour: 'd84000'},
-			{ label: 'not completed', colour: 'ff3300'},
+			{ label: 'this question not answered', colour: 'ff3300'},
 		] if params[:type] == 'satisfaction'
 	
 	values = [
@@ -133,7 +132,7 @@ get '/:view/piechart_data/:type' do
 			{ label: 'filled in for me', colour: 'ff0051'}, 
 			{ label: 'used accessibility tool', colour: 'ae00ff'}, 
 			{ label: 'other help', colour: '685aff'}, 
-			{ label: 'not completed', colour: 'd84000'}, 
+			{ label: 'this question not answered', colour: 'd84000'}, 
 		] if params[:type] == 'help'
 
 	values.each do |obj|
@@ -201,7 +200,7 @@ def flatten_feedback(text_in)
 	when 'i had some other kind of help'
     	out = 'other help'
     when nil, ''
-    	out = 'not completed'
+    	out = 'this question not answered'
     end
 	out
 end
