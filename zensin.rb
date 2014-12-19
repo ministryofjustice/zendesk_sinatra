@@ -84,8 +84,9 @@ get '/:view/count' do
 
 	view = client.view.find(id: params[:view]) # '48000166')
 	tickets = view.tickets
-
-	"count=#{tickets.count}"
+	'{ "item": [{"text": "Unfortunately, as you probably already know, people","type": 0}'
+	@count = [{ text: "Records: #{tickets.count}", type: 0 }]
+	{ item: @count }.to_json
 end
 
 get '/ticket/:ticket' do
