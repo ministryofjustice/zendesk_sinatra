@@ -84,8 +84,12 @@ get '/:view/count' do
 
 	view = client.view.find(id: params[:view]) # '48000166')
 	tickets = view.tickets
-	'{ "item": [{"text": "Unfortunately, as you probably already know, people","type": 0}'
-	@count = [{ text: "Records: #{tickets.count}", type: 0 }]
+	newest_ticket = tickets.first
+
+	in_last_day = (((Time.now - newest_ticket[:created_at])/3600)/24) < 1
+	@alert = 0
+	@alert = 1 if in_last_day
+	@count = [{ text: "Responses: #{tickets.count}", type: @alert }]
 	{ item: @count }.to_json
 end
 
