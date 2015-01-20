@@ -181,7 +181,7 @@ get '/:view/feedback/:type' do
 			puts "error messaage : #{e.message}"
 		end
 	end
-	@output = { item: @result }
+	@output =  @result 
 	@output.to_json
 end
 
