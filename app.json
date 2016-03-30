@@ -1,0 +1,6 @@
+{
+  "name": "Zendesk/Sinatra",
+  "description": "A zendesk API interface",
+  "repository": "https://github.com/ministryofjustice/zendesk_sinatra",
+  "keywords": ["sinatra", "zendesk"]
+}
