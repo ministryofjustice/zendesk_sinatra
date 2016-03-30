@@ -2,7 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     daemons (1.1.9)
-    eventmachine (1.0.3)
+    eventmachine (1.0.8)
     faraday (0.9.0)
       multipart-post (>= 1.2, < 3)
     hashie (3.3.2)
