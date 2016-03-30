@@ -8,8 +8,13 @@ http://your_heroku_app/zendesk_view_id/piechart_data/satisfaction
 ## Installation
 * Make sure you are logged in to heroku
 * Get your zendesk API token and login email ready
-* https://heroku.com/deploy?template=https://github.com/ministryofjustice/zendesk_sinatra/tree/master
-* Enter your TOKEN and email into the Heroku settings tab 
+* [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/ministryofjustice/zendesk_sinatra/tree/master)
+* When the steup is complete, select Manage App
+* Switch to the Settings tab and click Reveal Config Vars
+* Enter the following Key-Value pairs
+    - zen_key: your zendesk email login
+    - zen_token: your zendesk API token
+* Done
 
 ## Contributors
 1. Fork it ( https://github.com/ministryofjustice/zendesk_sinatra )
