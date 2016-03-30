@@ -6,7 +6,10 @@ To access your chosen data you'll need to know the zendesk view_id
 http://your_heroku_app/zendesk_view_id/piechart_data/satisfaction
 
 ## Installation
-https://heroku.com/deploy?template=https://github.com/ministryofjustice/zendesk_sinatra/tree/master
+* Make sure you are logged in to heroku
+* Get your zendesk API token and login email ready
+* https://heroku.com/deploy?template=https://github.com/ministryofjustice/zendesk_sinatra/tree/master
+* Enter your TOKEN and email into the Heroku settings tab 
 
 ## Contributors
 1. Fork it ( https://github.com/ministryofjustice/zendesk_sinatra )
