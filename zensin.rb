@@ -153,7 +153,7 @@ get '/:view/feedback/raw' do
 	view = client.view.find(id: params[:view]) 
 
 	@result = []
-	view.tickets.all.to_json
+	view.tickets.all
 end
 
 get '/:view/feedback/:type' do
