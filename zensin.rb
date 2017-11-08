@@ -4,6 +4,7 @@ require 'yaml'
 require 'json'
 require 'date'
 require 'time'
+require 'pry'
 
 class Ticket
 	attr_accessor :ticket_id
@@ -151,9 +152,11 @@ end
 
 get '/:view/feedback/raw' do
 	view = client.view.find(id: params[:view]) 
-
 	@result = []
-	view.tickets.all
+	view.tickets.each do |t|
+		@result.push(t.description.to_json)
+	end
+	@result.to_json
 end
 
 get '/:view/feedback/:type' do
