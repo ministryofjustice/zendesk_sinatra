@@ -149,6 +149,13 @@ get '/:view/piechart_data/:type' do
 	@output.to_json
 end
 
+get '/:view/feedback/raw' do
+	view = client.view.find(id: params[:view]) 
+
+	@result = []
+	view.tickets.to_json
+end
+
 get '/:view/feedback/:type' do
 	view = client.view.find(id: params[:view]) 
 
