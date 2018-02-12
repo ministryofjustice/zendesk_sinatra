@@ -14,7 +14,6 @@ class Ticket
 	attr_accessor :help_feedback
 	attr_accessor :other
 
-	
 	def initialize(ticket)
 		yaml_in = YAML.load(ticket.description.gsub(/\r\n/,'\n').gsub(/(?<!\n)\n(?!\n)/,''))
 		@satisfaction_feedback = flatten_feedback(yaml_in['satisfaction_feedback'])
@@ -78,7 +77,6 @@ class Ticket
         	other: self.other.to_s
     	}.to_json
     end
-
 end
 
 get '/:view/count' do
@@ -150,11 +148,13 @@ get '/:view/piechart_data/:type' do
 	@output.to_json
 end
 
-get '/:view/feedback/raw' do
+get '/:view/feedback/raw/:page' do
+	content_type :json
 	view = client.view.find(id: params[:view]) 
 	@result = []
-	view.tickets.each do |t|
-		@result.push(t.description.to_json)
+	tickets = view.tickets.page(params[:page]).per_page(100)
+	tickets.each do |t|
+		@result.push(t.description.split(' - '))
 	end
 	@result.to_json
 end
