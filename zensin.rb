@@ -15,7 +15,7 @@ class Ticket
 	attr_accessor :other
 
 	def initialize(ticket)
-		yaml_in = YAML.load(ticket.description.gsub(/\r\n/,'\n').gsub(/(?<!\n)\n(?!\n)/,''))
+		yaml_in = YAML.ad(ticket.description.gsub(/\r\n/,'\n').gsub(/(?<!\n)\n(?!\n)/,''))
 		@satisfaction_feedback = flatten_feedback(yaml_in['satisfaction_feedback'])
 		@improvement_feedback = yaml_in['improvement_feedback']
 		@difficulty_feedback = yaml_in['difficulty_feedback']
@@ -164,6 +164,28 @@ get '/:view/feedback/raw/:page' do
 		data = { date: t.created_at }
 		data[rating.split(': ')[0]] = rating.split(': ')[1]
 		data[email.split(': ')[0]] = email.split(': ')[1]
+		data[comment.split(': ')[0]] = comment.split(': ')[1]
+		data['ticket_id'] = t.id
+		@result.push(data)
+	end
+	@result.to_json
+end
+
+get '/:view/with_comments/:page' do
+	content_type :json
+	view = client.view.find(id: params[:view]) 
+	@result = []
+	tickets = view.tickets.page(params[:page]).per_page(100)
+	tickets.each do |t|
+		description = t.description
+		rating = description[0, 9]
+		email = description[description.index('email'), description.length - description.index('email')]
+		description.slice! rating
+		description.slice! email
+		comment = description[3, description.length-6]
+		data = { date: t.created_at }
+		# data[rating.split(': ')[0]] = rating.split(': ')[1]
+		# data[email.split(': ')[0]] = email.split(': ')[1]
 		data[comment.split(': ')[0]] = comment.split(': ')[1]
 		data['ticket_id'] = t.id
 		@result.push(data)
