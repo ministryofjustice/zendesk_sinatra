@@ -196,7 +196,7 @@ get '/:view/with_comments' do
 	limit = 20
 	view = client.view.find(id: params[:view]) 
 	@result = []
-	loop 
+	begin 
 		@page = @page + 1
 		tickets = view.tickets.page(@page).per_page(100)
 		tickets.each do |t|
