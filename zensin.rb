@@ -193,11 +193,12 @@ end
 get '/:view/with_comments' do
 	content_type :json
 	@page = 0
-	limit = 20
+	limit = 10
 	view = client.view.find(id: params[:view]) 
 	@result = []
 	while @result.count < limit do
 		@page = @page + 1
+		logger.info "Page #{@page}"
 		tickets = view.tickets.page(@page).per_page(100)
 		tickets.each do |t|
 			description = t.description
