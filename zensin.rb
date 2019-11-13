@@ -183,15 +183,35 @@ get '/:view/with_comments/:page' do
 		description.slice! rating
 		description.slice! email
 		comment = description[3, description.length-6]
-		data = { date: t.created_at }
-		# data[rating.split(': ')[0]] = rating.split(': ')[1]
-		# data[email.split(': ')[0]] = email.split(': ')[1]
+		data = { ticket_id: t.id }
 		data[comment.split(': ')[0]] = comment.split(': ')[1]
-		data['ticket_id'] = t.id
-		data['url'] = "https://ministryofjustice.zendesk.com/agent/tickets/#{t.id}"
 		@result.push(data) if data['comment']
 	end
 	@result.to_json
+end
+
+get '/:view/with_comments' do
+	content_type :json
+	@page = 0
+	limit = 20
+	view = client.view.find(id: params[:view]) 
+	@result = []
+	do while @result.count < limit
+		@page = page + 1
+		tickets = view.tickets.page(@page).per_page(100)
+		tickets.each do |t|
+			description = t.description
+			rating = description[0, 9]
+			email = description[description.index('email'), description.length - description.index('email')]
+			description.slice! rating
+			description.slice! email
+			comment = description[3, description.length-6]
+			data = { ticket_id: t.id }
+			data[comment.split(': ')[0]] = comment.split(': ')[1]
+			@result.push(data) if data['comment']
+		end
+	end
+	@result.to_json	
 end
 
 get '/:view/bug_reports/raw/:page' do
