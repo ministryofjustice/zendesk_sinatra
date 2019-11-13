@@ -201,6 +201,7 @@ get '/:view/with_comments' do
 		logger.info "Page #{@page}"
 		tickets = view.tickets.page(@page).per_page(100)
 		tickets.each do |t|
+			next if t['status'].eql?('solved')
 			description = t.description
 			rating = description[0, 9]
 			email = description[description.index('email'), description.length - description.index('email')]
@@ -215,7 +216,7 @@ get '/:view/with_comments' do
 	@result.to_json	
 end
 
-get '/:view/angelas_ticket/:ticket' do
+get '/:view/ticket/:ticket' do
 	content_type :json
 	view = client.view.find(id: params[:view]) 
 	view.tickets.find(id: params[:ticket]).to_json
