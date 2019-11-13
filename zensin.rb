@@ -188,7 +188,7 @@ get '/:view/with_comments/:page' do
 		# data[email.split(': ')[0]] = email.split(': ')[1]
 		data[comment.split(': ')[0]] = comment.split(': ')[1]
 		data['ticket_id'] = t.id
-		@result.push(data)
+		@result.push(data) if data['comment']
 	end
 	@result.to_json
 end
