@@ -215,6 +215,14 @@ get '/:view/with_comments' do
 	@result.to_json	
 end
 
+get '/:view/angelas_ticket/:ticket' do
+	content_type :json
+	view = client.view.find(id: params[:view]) 
+	view.tickets.find(params[:ticket]).to_json
+end
+
+
+
 get '/:view/bug_reports/raw/:page' do
 	content_type :json
 	view = client.view.find(id: params[:view]) 
