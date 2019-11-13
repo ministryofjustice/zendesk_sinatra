@@ -218,7 +218,7 @@ end
 get '/:view/angelas_ticket/:ticket' do
 	content_type :json
 	view = client.view.find(id: params[:view]) 
-	view.tickets.find(params[:ticket]).to_json
+	view.tickets.find(id: params[:ticket]).to_json
 end
 
 
