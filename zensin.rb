@@ -196,7 +196,7 @@ get '/:view/with_comments' do
 	limit = 20
 	view = client.view.find(id: params[:view]) 
 	@result = []
-	do while @result.count < limit
+	loop 
 		@page = @page + 1
 		tickets = view.tickets.page(@page).per_page(100)
 		tickets.each do |t|
@@ -210,7 +210,7 @@ get '/:view/with_comments' do
 			data[comment.split(': ')[0]] = comment.split(': ')[1]
 			@result.push(data) if data['comment']
 		end
-	end
+	end unless @result.count => limit
 	@result.to_json	
 end
 
