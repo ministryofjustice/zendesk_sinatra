@@ -216,13 +216,52 @@ get '/:view/with_comments' do
 	@result.to_json	
 end
 
+def get_value(kvp)
+	kvp.split(': ')[1]
+end
+
+get '/:view/unsolved_with_comments/:type' do
+	content_type :json
+	@page = 0
+	@result = []
+	if params[:type].eql?('feedback')
+		feedback = client.search(query:'type:ticket status<solved tags:advocate_defence_payments tags:gamma subject:Feedback description-"comment:  -"')
+		logger.info "Feedback: #{feedback.count}"
+		feedback.each do |t|
+			desc_part = t.description.split(' - ')
+			data = { ticket_id: t.id }
+			data['comment'] = get_value(desc_part[1])
+			data['date'] = t.created_at
+			data['subject'] = t.subject
+			@result.push(data) #if data['comment']
+		end
+	elsif params[:type].eql?('bugs')
+		bug_reports = client.search(query:'type:ticket status<solved tags:advocate_defence_payments tags:gamma subject:Bug description-"event:  -"')
+		logger.info "Bug reports: #{bug_reports.count}"
+		bug_reports.each do |t|
+			case_number = t.description.split(' - event: ')[0]
+			remain = t.description.split(' - event: ')[1]
+			parts = remain.split(' - email: ')
+			email = parts[1]
+			text_parts = parts[0].split(' - outcome: ')
+			data = { ticket_id: t.id }
+			# data['case_number'] = get_value(case_number)
+			data['event'] = text_parts[0]
+			data['outcome'] = text_parts[1]
+			# data['email'] = email
+			data['date'] = t.created_at
+			data['subject'] = t.subject
+			@result.push(data) #if data['comment']
+		end
+	end
+	@result.to_json
+end
+
 get '/:view/ticket/:ticket' do
 	content_type :json
 	view = client.view.find(id: params[:view]) 
 	view.tickets.find(id: params[:ticket]).to_json
 end
-
-
 
 get '/:view/bug_reports/raw/:page' do
 	content_type :json
