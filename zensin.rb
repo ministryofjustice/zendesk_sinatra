@@ -148,25 +148,53 @@ get '/:view/piechart_data/:type' do
 	@output.to_json
 end
 
+get '/:view/with_comments' do
+	content_type :json
+	view = client.view.find(id: params[:view]) 
+	@result = []
+	tickets = view.tickets.page(params[:page]).per_page(100)
+	tickets.each do |t|
+		next unless t.subject=~/(gamma)/
+		data = { ticket_id: t.id }
+		data['created_at'] = t.created_at
+		parts = t.description.split(/ - \w+: /)
+		if t['raw_subject'].eql?('Feedback (gamma)')
+			# data['rating'] = parts[0]
+			data['comment'] = parts[1]
+			data['email'] = parts[2]
+			data['type'] = 'Feedback'
+		elsif t['raw_subject'].eql?('Bug report (gamma)')
+			# data['case_number'] = parts[0]
+			data['comment'] = parts[1]
+			data['outcome'] = parts[2] if parts[2] != parts[1]
+			data['email'] = parts[3]
+			data['type'] = 'Bug report'
+		end
+		@result.push(data) unless data['comment'].empty?
+	end
+	@result.to_json
+end
+
 get '/:view/feedback/raw/:page' do
 	content_type :json
 	view = client.view.find(id: params[:view]) 
 	@result = []
 	tickets = view.tickets.page(params[:page]).per_page(100)
 	tickets.each do |t|
-		next if t['raw_subject'].eql?('Bug report (gamma)')
-		description = t.description
-		rating = description[0, 9]
-		email = description[description.index('email'), description.length - description.index('email')]
-		description.slice! rating
-		description.slice! email
-		comment = description[3, description.length-6]
-		data = { date: t.created_at }
-		data[rating.split(': ')[0]] = rating.split(': ')[1]
-		data[email.split(': ')[0]] = email.split(': ')[1]
-		data[comment.split(': ')[0]] = comment.split(': ')[1]
-		data['ticket_id'] = t.id
-		@result.push(data)
+		if t['raw_subject'].eql?('Bug report (gamma)')
+			description = t.description
+			rating = description[0, 9]
+			email = description[description.index('email:'), description.length - description.index('email:')]
+			description.slice! rating
+			description.slice! email
+			comment = description[3, description.length-6]
+			data = { date: t.created_at }
+			data[rating.split(': ')[0]] = rating.split(': ')[1]
+			data[email.split(': ')[0]] = email.split(': ')[1]
+			data[comment.split(': ')[0]] = comment.split(': ')[1]
+			data['ticket_id'] = t.id
+			@result.push(data)
+		end
 	end
 	@result.to_json
 end
